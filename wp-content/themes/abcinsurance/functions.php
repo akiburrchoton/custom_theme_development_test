@@ -50,7 +50,8 @@ if ( ! function_exists( 'abcinsurance_setup' ) ) :
 		// This theme uses wp_nav_menu() in one location.
 		register_nav_menus(
 			array(
-				'menu-1' => esc_html__( 'Primary', 'abcinsurance' ),
+				'primary' => __('Primary Menu', 'abcinsurance'),
+				'footer' => __('Footer Menu', 'abcinsurance')
 			)
 		);
 
@@ -140,7 +141,8 @@ add_action( 'widgets_init', 'abcinsurance_widgets_init' );
  * Enqueue scripts and styles.
  */
 function abcinsurance_scripts() {
-	wp_enqueue_style( 'abcinsurance-style', get_stylesheet_uri(), array(), _S_VERSION );
+	// wp_enqueue_style( 'abcinsurance-style', get_stylesheet_uri(), array(), _S_VERSION );
+	wp_enqueue_style( 'abcinsurance-style', get_template_directory_uri() . 'assets/stylesheet.css', array(), _S_VERSION, true );
 	wp_style_add_data( 'abcinsurance-style', 'rtl', 'replace' );
 
 	wp_enqueue_script( 'abcinsurance-navigation', get_template_directory_uri() . '/js/navigation.js', array(), _S_VERSION, true );
@@ -178,3 +180,64 @@ if ( defined( 'JETPACK__VERSION' ) ) {
 	require get_template_directory() . '/inc/jetpack.php';
 }
 
+
+
+// Custom Post Type
+
+function company_post_type(){
+	$args = array(
+		'labels'      => array(
+			'name'          => __( 'Companies', 'textdomain' ),
+			'singular_name' => __( 'Company', 'textdomain' ),
+		),
+		
+		'public'=> true,
+		'has_archive' => true,
+		'menu_icon'   => 'dashicons-businessman',
+		'supports' => array('title', 'editor', 'thumbnail'),
+		'rewrite'     => array( 'slug' => 'companies' ),
+	);
+
+	register_post_type('companies', $args);
+}
+
+add_action('init', 'company_post_type');
+
+
+ 
+function company_taxonomy() {
+	
+	$args   = array(
+		
+		'labels'      => array(
+			'name'          => 'Clients',
+			'singular_name' => 'Client',
+		),
+		
+		'public'=> true,
+	);
+
+	register_taxonomy( 'clients', [ 'companpiiess'], $args );
+}
+add_action( 'init', 'company_taxonomy' );
+
+
+
+function employee_post_type(){
+	$args = array(
+		'labels'      => array(
+			'name'          => __( 'Employees', 'textdomain' ),
+			'singular_name' => __( 'Employee', 'textdomain' ),
+		),
+		
+		'public'=> true,
+		'has_archive' => true,
+		'menu_icon'   => 'dashicons-admin-users',
+		'supports'	 => array('title', 'editor', 'thumbnail'),
+		'rewrite'     => array( 'slug' => 'employees' ),
+	);
+
+	register_post_type('employees', $args);
+}
+
+add_action('init', 'employee_post_type');
