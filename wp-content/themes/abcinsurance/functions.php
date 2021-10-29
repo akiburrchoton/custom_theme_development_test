@@ -203,26 +203,6 @@ function company_post_type(){
 
 add_action('init', 'company_post_type');
 
-
- 
-function company_taxonomy() {
-	
-	$args   = array(
-		
-		'labels'      => array(
-			'name'          => 'Clients',
-			'singular_name' => 'Client',
-		),
-		
-		'public'=> true,
-	);
-
-	register_taxonomy( 'clients', [ 'companpiiess'], $args );
-}
-add_action( 'init', 'company_taxonomy' );
-
-
-
 function employee_post_type(){
 	$args = array(
 		'labels'      => array(
@@ -241,3 +221,23 @@ function employee_post_type(){
 }
 
 add_action('init', 'employee_post_type');
+
+
+// Custom Block 
+
+add_action('acf/init', 'my_acf_blocks_init');
+function my_acf_blocks_init() {
+
+    // Check function exists.
+    if( function_exists('register_block_type') ) {
+
+        // Register a testimonial block.
+        register_block_type(array(
+            'name'              => 'Companies',
+            'title'             => __('Company'),
+            'description'       => __('A custom company block.'),
+            'render_template'   => 'template-parts/blocks/company/companies.php',
+            'category'          => 'formatting',
+        ));
+    }
+}
